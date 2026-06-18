@@ -1,0 +1,137 @@
+{
+  "eval_set_id": "refund_agent_golden",
+  "name": "Refund agent — golden trajectory set",
+  "description": "Five cases covering every branch the refund agent can take. This is the COMPLETE reference set used for the trajectory demo and for CI. Attendees build a subset of this themselves in exercises/01_trajectory.",
+  "eval_cases": [
+    {
+      "eval_id": "A1001_valid_within_window",
+      "conversation": [
+        {
+          "invocation_id": "inv_a1001",
+          "user_content": {
+            "parts": [{ "text": "Hi, I'd like a refund for my order A1001." }]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "I've approved a $79.99 refund for order A1001 (Wireless headphones). It will appear on your original payment method within 5-7 business days. Is there anything else I can help with?"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              { "name": "get_order_status", "args": { "order_id": "A1001" } },
+              { "name": "get_refund_policy", "args": { "category": "electronics" } },
+              { "name": "issue_refund", "args": { "order_id": "A1001", "amount": 79.99 } }
+            ]
+          }
+        }
+      ],
+      "session_input": { "app_name": "refund_agent", "user_id": "u1", "state": {} }
+    },
+    {
+      "eval_id": "A1002_outside_window_declined",
+      "conversation": [
+        {
+          "invocation_id": "inv_a1002",
+          "user_content": {
+            "parts": [{ "text": "Please refund order A1002." }]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "I'm sorry, but order A1002 (Bluetooth speaker) was placed on 2026-04-01, which is outside our 30-day refund window for electronics, so I'm unable to issue a refund. If the item is damaged or defective, let me know and I can take another look."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              { "name": "get_order_status", "args": { "order_id": "A1002" } },
+              { "name": "get_refund_policy", "args": { "category": "electronics" } }
+            ]
+          }
+        }
+      ],
+      "session_input": { "app_name": "refund_agent", "user_id": "u2", "state": {} }
+    },
+    {
+      "eval_id": "A1003_damaged_refunded",
+      "conversation": [
+        {
+          "invocation_id": "inv_a1003",
+          "user_content": {
+            "parts": [{ "text": "My order A1003 arrived cracked and damaged. I'd like my money back." }]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "I'm sorry the Ceramic vase arrived damaged. I've approved a $49.99 refund for order A1003, which will reach your original payment method in 5-7 business days."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              { "name": "get_order_status", "args": { "order_id": "A1003" } },
+              { "name": "get_refund_policy", "args": { "category": "home" } },
+              { "name": "issue_refund", "args": { "order_id": "A1003", "amount": 49.99 } }
+            ]
+          }
+        }
+      ],
+      "session_input": { "app_name": "refund_agent", "user_id": "u3", "state": {} }
+    },
+    {
+      "eval_id": "A1004_not_found",
+      "conversation": [
+        {
+          "invocation_id": "inv_a1004",
+          "user_content": {
+            "parts": [{ "text": "I want a refund for order A1004." }]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "I couldn't find an order with the ID A1004. Could you double-check the order number? It usually appears in your confirmation email."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              { "name": "get_order_status", "args": { "order_id": "A1004" } }
+            ]
+          }
+        }
+      ],
+      "session_input": { "app_name": "refund_agent", "user_id": "u4", "state": {} }
+    },
+    {
+      "eval_id": "A1005_already_refunded",
+      "conversation": [
+        {
+          "invocation_id": "inv_a1005",
+          "user_content": {
+            "parts": [{ "text": "Can you refund order A1005 for me?" }]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "It looks like order A1005 (Running shoes) has already been refunded, so there's nothing further to process on it. If you expected a different order, let me know the ID and I'll check."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              { "name": "get_order_status", "args": { "order_id": "A1005" } }
+            ]
+          }
+        }
+      ],
+      "session_input": { "app_name": "refund_agent", "user_id": "u5", "state": {} }
+    }
+  ]
+}

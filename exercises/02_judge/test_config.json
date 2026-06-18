@@ -1,0 +1,18 @@
+{
+  "_comment": "STARTER judge — deliberately vague. This is a BAD judge on purpose. One fuzzy rubric, no structure. Your job in Exercise 2 is to replace it with something specific. A poorly designed judge is worse than no judge: it gives you a green number you can't trust.",
+  "criteria": {
+    "rubric_based_final_response_quality_v1": {
+      "threshold": 0.8,
+      "judge_model_options": {
+        "judge_model": "gemini-2.0-flash",
+        "num_samples": 3
+      },
+      "rubrics": [
+        {
+          "rubric_id": "is_good",
+          "rubric_content": { "text_property": "The response should be helpful and good." }
+        }
+      ]
+    }
+  }
+}
