@@ -1,6 +1,8 @@
 # Pinned for the workshop. Do NOT float these — the ADK eval API surface moves
 # between releases and a surprise upgrade mid-session is exactly what we don't
 # want. Verified against Python 3.10+.
-google-adk==1.35.2
+# The [eval] extra is REQUIRED — it pulls in pandas, rouge-score, tabulate, etc.
+# Without it the agent imports fine but `adk eval` / AgentEvaluator fail at runtime.
+google-adk[eval]==1.35.2
 pytest==8.3.4
 pytest-asyncio==0.25.2

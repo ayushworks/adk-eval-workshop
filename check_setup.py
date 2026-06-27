@@ -48,6 +48,21 @@ try:
 except Exception as e:  # pragma: no cover
     check("google-adk installed", False, f"pip install -r requirements.txt  ({e})")
 
+# The [eval] extra (pandas, rouge-score, ...) is needed to RUN evals. The agent
+# imports without it, so check the extra explicitly — this is a common gotcha.
+try:
+    import pandas  # noqa: F401
+    import rouge_score  # noqa: F401
+
+    check("google-adk[eval] extras installed", True)
+except Exception as e:  # pragma: no cover
+    check(
+        "google-adk[eval] extras installed",
+        False,
+        'pip install "google-adk[eval]==1.35.2"  (or: pip install -r requirements.txt)'
+        f"  ({e})",
+    )
+
 for mod in ("pytest", "pytest_asyncio"):
     try:
         __import__(mod)
