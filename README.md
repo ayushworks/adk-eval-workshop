@@ -125,7 +125,7 @@ eval/                         the reference / CI eval
   test_refund_agent.py        the same eval as a pytest test (what CI runs)
 exercises/                    what YOU build during the session
   01_trajectory/              fill in TODO cases, then make it break
-  02_judge/                   turn a vague rubric into a trustworthy judge
+  02_judge/                   rubric-based judging + hallucination check
 solutions/                    completed versions — copy if you fall behind
 .github/workflows/eval.yml    eval as a CI gate
 check_setup.py                pre-workshop setup check
@@ -161,8 +161,9 @@ weakened agent fail the trajectory check.
 
 ### 2. LLM-as-a-Judge
 
-Do **`exercises/02_judge/`** — run a deliberately vague judge, watch it pass a
-bad answer, then redesign it into rubrics you can actually trust.
+Do **`exercises/02_judge/`** — score the agent's live reply with rubric-based
+judging plus a hallucination check (`hallucinations_v1`), both running on a
+plain API key, and read the judge's per-rubric reasoning.
 
 ### 3. Eval as an engineering discipline
 

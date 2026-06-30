@@ -1,7 +1,7 @@
 {
   "eval_set_id": "refund_agent_judge_exercise",
-  "name": "Exercise 2 — LLM-as-a-Judge",
-  "description": "Two cases whose replies have real quality variance. We score the agent's response with an LLM judge driven by the rubrics in test_config.json.",
+  "name": "Section 3 — LLM-as-a-Judge",
+  "description": "Two cases whose replies have real quality variance. The agent is run live on each user message, and an LLM judge scores the actual reply against rubrics + a hallucination check.",
   "eval_cases": [
     {
       "eval_id": "A1001_refund_reply_quality",
@@ -10,14 +10,6 @@
           "invocation_id": "inv_a1001",
           "user_content": {
             "parts": [{ "text": "Hi, I'd like a refund for my order A1001." }]
-          },
-          "final_response": {
-            "role": "model",
-            "parts": [
-              {
-                "text": "I've approved a $79.99 refund for order A1001 (Wireless headphones). It will appear on your original payment method within 5-7 business days."
-              }
-            ]
           },
           "intermediate_data": {
             "tool_uses": [
@@ -37,14 +29,6 @@
           "invocation_id": "inv_a1002",
           "user_content": {
             "parts": [{ "text": "Please refund order A1002." }]
-          },
-          "final_response": {
-            "role": "model",
-            "parts": [
-              {
-                "text": "I'm sorry, but order A1002 was placed on 2026-04-01, which is outside our 30-day refund window for electronics, so I'm unable to issue a refund."
-              }
-            ]
           },
           "intermediate_data": {
             "tool_uses": [

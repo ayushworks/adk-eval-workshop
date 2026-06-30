@@ -1,59 +1,55 @@
 # Exercise 2 — LLM-as-a-Judge (~22 min)
 
-**The idea:** trajectory tells you the agent took the right *steps*, but says
-nothing about whether the reply was actually *good* — right amount, right
-timeline, real reason, right tone, no invented policy. You can't lexically
-match free-text quality at scale, so you use another model as a judge. The catch:
-**a poorly designed judge is worse than no judge.** A vague rubric hands you a
-confident green score you can't trust.
+**The idea:** trajectory tells you the agent took the right *steps*, but says nothing about whether
+the reply was actually *good* — right amount, right timeline, real reason, right tone, and nothing
+made up. You can't lexically match free-text quality at scale, so you use another model as a judge.
+The lesson that matters: **a judge is only as good as its rubric.** Vague criteria ("rate
+helpfulness 1–5") give you a confident number you can't trust; specific, decomposed, checkable
+criteria give you a signal you can gate a release on.
 
-`test_config.json` here ships a deliberately bad judge: one fuzzy rubric, *"The
-response should be helpful and good."* You're going to feel why that fails, then
-fix it.
+We use two judge metrics, both of which run on a plain Gemini **API key** (no Vertex AI):
 
-## Part A — watch the bad judge pass a bad answer (7 min)
+## What `test_config.json` checks
 
-1. Run the vague judge against the agent:
+**`rubric_based_final_response_quality_v1`** — scores the agent's live reply against four explicit
+rubrics, each phrased as a checkable assertion:
 
-   ```bash
-   adk eval refund_agent exercises/02_judge/judge.evalset.json \
-     --config_file_path exercises/02_judge/test_config.json
-   ```
+- `states_amount_when_refunded` — if a refund was issued, the reply states the exact dollar amount.
+- `states_timeline_when_refunded` — if a refund was issued, the reply says when the money arrives.
+- `gives_specific_reason` — the reply gives a clear, specific reason for the decision.
+- `professional_tone` — the reply is warm and professional.
 
-   It passes. Fine.
+Notice the rubrics are *specific and decomposed* — each one is independently true or false, so the
+score is explainable. That's the whole difference between a judge you can trust and one you can't.
 
-2. Now **break the agent's reply quality.** In `refund_agent/agent.py`, delete
-   the line in the instruction that says to *state the refund amount and the
-   expected timeline*. Re-run the same eval.
+**`hallucinations_v1`** — a separate check that segments the reply into individual claims and
+verifies each against the **trusted evidence** (the user's request and the actual tool outputs). It
+catches the agent inventing a policy detail, a refund window, or an amount the tools never returned.
+This is the natural division of labor: the rubrics check *"did the reply include what a good answer
+needs,"* and hallucinations checks *"did the reply state anything not backed by the tools."*
 
-   The agent now answers *"Sure, I've processed that for you."* — no amount, no
-   timeline, useless to a real customer. **The vague judge still says it's
-   good.** That green score is a lie. This is the whole point of the section.
+## Run it
 
-## Part B — design a judge you can trust (12 min)
+```bash
+adk eval refund_agent exercises/02_judge/judge.evalset.json \
+  --config_file_path exercises/02_judge/test_config.json
+```
 
-Replace the single fuzzy rubric in `test_config.json` with several *specific,
-checkable* ones. Good rubrics read like assertions, not vibes. Think about what
-a genuinely good refund reply must contain. Some to get you started:
+What happens underneath: the agent is **run live** on each user message (`A1001` → refund, `A1002`
+→ decline), producing a real reply and real tool calls. The judge model then scores those *actual*
+replies against the rubrics, and `hallucinations_v1` checks them against the tool outputs. (The
+metrics ignore any reference answer in the eval set — they grade what the agent actually said.)
 
-- If a refund was issued, the response states the exact dollar amount.
-- If a refund was issued, the response states when the money arrives.
-- The response gives a clear, specific reason for the decision.
-- The response does not state any policy detail the tools did not return.
-- The tone is warm and professional.
+## Read the output
 
-Also tighten the **judge config itself** — pin the `judge_model` and raise
-`num_samples` so the score is stable across runs. A judge that disagrees with
-itself run to run is its own kind of broken.
+The detailed results show, per case: the `prompt`, the `actual_response`, the per-rubric scores with
+the judge's reasoning, and the hallucination score. Read the **reasoning** column — that's where you
+see *why* the judge scored each rubric the way it did, which is how you sanity-check that the judge
+itself is behaving.
 
-Re-run with the still-weakened agent: a good judge now **fails** the
-amount/timeline rubrics. Restore the agent instruction and re-run: it passes
-again. That flip — from a true fail to a true pass — is what a trustworthy judge
-looks like.
+> Tip: `num_samples` is set to 5 so the judge is sampled multiple times and the score is stable. A
+> judge that disagrees with itself run-to-run is its own kind of broken — pin the model and raise the
+> sample count for a score you can rely on.
 
-> The tightened config is in `solutions/02_judge/test_config.json` if you want to
-> compare or catch up.
-
-**Takeaway:** the judge is only as good as its rubric. Specific, decomposed,
-checkable criteria + a pinned model + enough samples. Then it's a signal you can
-gate a release on (Section 4).
+**Takeaway:** the judge is only as good as its rubric — specific, decomposed, checkable criteria,
+plus a pinned model and enough samples. Then it's a signal you can put in CI (Section 4).

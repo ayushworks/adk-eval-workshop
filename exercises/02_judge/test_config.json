@@ -1,18 +1,23 @@
 {
-  "_comment": "STARTER judge — deliberately vague. This is a BAD judge on purpose. One fuzzy rubric, no structure. Your job in Exercise 2 is to replace it with something specific. A poorly designed judge is worse than no judge: it gives you a green number you can't trust.",
+  "_comment": "Section 3 — LLM-as-a-Judge. Both metrics run on a Gemini API key (no Vertex). rubric_based_final_response_quality_v1 scores the agent's LIVE reply against specific, checkable rubrics. hallucinations_v1 separately flags any claim in the reply that is NOT grounded in the tool outputs.",
   "criteria": {
     "rubric_based_final_response_quality_v1": {
-      "threshold": 0.8,
-      "judge_model_options": {
-        "judge_model": "gemini-3.1-flash-lite",
-        "num_samples": 3
-      },
+      "threshold": 0.7,
+      "judge_model_options": { "judge_model": "gemini-3.1-flash-lite", "num_samples": 5 },
       "rubrics": [
-        {
-          "rubric_id": "is_good",
-          "rubric_content": { "text_property": "The response should be helpful and good." }
-        }
+        { "rubric_id": "states_amount_when_refunded",
+          "rubric_content": { "text_property": "If a refund was issued, the response states the exact refund amount in dollars (e.g. $79.99). If no refund was issued, this rubric is satisfied." } },
+        { "rubric_id": "states_timeline_when_refunded",
+          "rubric_content": { "text_property": "If a refund was issued, the response tells the customer when the money will arrive (e.g. 5-7 business days). If no refund was issued, this rubric is satisfied." } },
+        { "rubric_id": "gives_specific_reason",
+          "rubric_content": { "text_property": "The response gives a clear, specific reason for the decision (within window, outside the 30-day window, item damaged, order already refunded, or order not found)." } },
+        { "rubric_id": "professional_tone",
+          "rubric_content": { "text_property": "The response is warm, professional, and appropriate for a customer-facing support reply." } }
       ]
+    },
+    "hallucinations_v1": {
+      "threshold": 0.8,
+      "judge_model_options": { "judge_model": "gemini-3.1-flash-lite", "num_samples": 5 }
     }
   }
 }
