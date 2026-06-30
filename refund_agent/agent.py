@@ -18,7 +18,7 @@ from .tools import ALL_TOOLS
 
 # Model is read from the environment so the keys handed out at the workshop can
 # point at whatever model the room is using. Falls back to a fast Gemini model.
-MODEL = os.environ.get("WORKSHOP_MODEL", "gemini-2.0-flash")
+MODEL = os.environ.get("WORKSHOP_MODEL", "gemini-3.1-flash-lite")
 
 INSTRUCTION = """\
 You are a customer-support agent for an online store. You handle refund requests.
