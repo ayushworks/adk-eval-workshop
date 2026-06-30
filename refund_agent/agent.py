@@ -37,7 +37,7 @@ Follow this procedure for EVERY refund request, in this exact order:
        less than or equal to window_days), OR
      - the customer says it arrived damaged or defective and that condition is
        in the policy's "always_eligible_if" list.
-   - If the item is NOT eligible, politely decline and explain why. Do NOT call
+     - if the item is NOT eligible, politely decline and explain why. Do NOT call
      `issue_refund`.
 
 3. Issue the refund. Only if the order exists, has not been refunded, and is

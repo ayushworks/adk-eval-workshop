@@ -1,0 +1,177 @@
+{
+  "eval_set_id": "refund_order",
+  "name": "refund_order",
+  "eval_cases": [
+    {
+      "eval_id": "order_A1001",
+      "conversation": [
+        {
+          "invocation_id": "e-8d7c36ff-75d8-49a5-9c57-c29ff2e859d1",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Hi, I'd like a refund for my order A1001."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "Hello! I have processed your refund request for order A1001 (Wireless headphones).\n\nSince your order was placed on June 5, 2026, it falls within our 30-day return window for electronics. I have successfully issued a refund of $79.99 to your original payment method. You can expect the funds to appear in your account within 5-7 business days.\n\nIf you have any other questions, please feel free to ask!"
+              },
+              {
+                "text": "",
+                "thought_signature": "EjQKMgEMOdbHnMEfAhwEFM4FFb3HgKQ-Xdokd9sPDd2CV9Cl7-CvUZlY-h25oSEPh3BW-sDa"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "refund_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "VIwp2Ftc",
+                        "args": {
+                          "order_id": "A1001"
+                        },
+                        "name": "get_order_status"
+                      },
+                      "thought_signature": "EjQKMgEMOdbHfWh2vmq34gt1c7QJKfwBw1KXa9D0QFdtuhMo9UI0wfwnckqQX_WU9VIWHJr5"
+                    },
+                    {
+                      "text": ""
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "refund_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "VIwp2Ftc",
+                        "name": "get_order_status",
+                        "response": {
+                          "found": true,
+                          "order_id": "A1001",
+                          "item": "Wireless headphones",
+                          "category": "electronics",
+                          "price": 79.99,
+                          "order_date": "2026-06-05",
+                          "status": "delivered",
+                          "already_refunded": false
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "refund_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "dMiJlyRi",
+                        "args": {
+                          "category": "electronics"
+                        },
+                        "name": "get_refund_policy"
+                      },
+                      "thought_signature": "EjQKMgEMOdbH3omxBcx8OxmetFyUt-O7fvh9Iaz5jSiFnB1Rocnr6wYYOlGKpulsMVZegMWe"
+                    },
+                    {
+                      "text": ""
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "refund_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "dMiJlyRi",
+                        "name": "get_refund_policy",
+                        "response": {
+                          "category": "electronics",
+                          "window_days": 30,
+                          "always_eligible_if": [
+                            "damaged",
+                            "defective"
+                          ],
+                          "notes": "Electronics are refundable within 30 days, or any time if damaged or defective."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "refund_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "nikyS0RT",
+                        "args": {
+                          "amount": 79.99,
+                          "order_id": "A1001"
+                        },
+                        "name": "issue_refund"
+                      },
+                      "thought_signature": "EjQKMgEMOdbHoAAc1HU1L8RqeO-qzxV8w0mkdTtHHXA0J2MPpH6mT8fC0JuubkbzxTY5YEFk"
+                    },
+                    {
+                      "text": ""
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "refund_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "nikyS0RT",
+                        "name": "issue_refund",
+                        "response": {
+                          "success": true,
+                          "order_id": "A1001",
+                          "refund_amount": 79.99,
+                          "eta_business_days": "5-7",
+                          "message": "Refund of USD 79.99 approved for order A1001."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1782585143.04034
+        }
+      ],
+      "session_input": {
+        "app_name": "refund_agent",
+        "user_id": "user"
+      },
+      "creation_timestamp": 1782585352.0266392
+    }
+  ],
+  "creation_timestamp": 1782585298.189617
+}
