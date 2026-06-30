@@ -15,6 +15,27 @@ framework-agnostic.
 
 ---
 
+## Running on a restricted network? Use Colab (recommended for locked-down laptops)
+
+If your machine's network blocks the Google AI endpoints (`generativelanguage.googleapis.com`,
+`aiplatform.googleapis.com`) — common on corporate laptops — the local setup below won't be able to
+reach a model. **Run the workshop in Google Colab instead:** the model calls execute on Google's
+network, not your laptop, so your API key works there even when it's blocked on the office network.
+
+[**Open the workshop notebook in Colab**](https://colab.research.google.com/github/ayushworks/adk-eval-workshop/blob/main/adk_eval_workshop_colab.ipynb)
+&nbsp;(`adk_eval_workshop_colab.ipynb`)
+
+For the Colab path you only need a **browser that can reach `colab.research.google.com`** and a
+Google account — no local Python, Git, or install. Make a copy (File → Save a copy in Drive) and run
+the cells top to bottom. (Verify a real ING laptop can open Colab before the session; if Colab itself
+is blocked, fall back to a provisioned cloud VM.) The notebook is self-contained — it writes the same
+agent and eval files you see in this repo. `adk web` is replaced by a code cell that runs the agent
+and prints its trajectory.
+
+The local setup below is for anyone **not** on a restricted network.
+
+---
+
 ## Setup (do this BEFORE the workshop — ~15 min)
 
 You need **Python 3.10+** and **Git**. You do **not** need an API key in advance —
